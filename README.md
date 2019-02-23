@@ -1,2 +1,5 @@
 # terrazzo
-Terrazzo patern generator
+
+Terrazzo patern generator.
+
+For fun 😊

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Terrazzo</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="src/Generator.js"></script>
+    <script src="src/renderer/SvgRenderer.js"></script>
+    <script src="src/Patch.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        const palettes = [
+            { colors: ['#112b3d', '#ddcab8', '#b25b49'], background: '#e6efee' },
+            { colors: ['#e2c3a3', '#c36d52', '#435755'], background: '#2a2d31' },
+            { colors: ['#af5d1b', '#203842', '#c0bcbd'], background: '#ededed' },
+        ];
+        const { innerWidth, innerHeight } = window;
+        const palette = palettes[Math.floor(Math.random() * palettes.length)];
+        const generator = new Generator(innerWidth, innerHeight, palette.colors);
+        const renderer = new SvgRenderer(innerWidth, innerHeight);
+
+        renderer.render(generator.getPatches(), palette.background);
+    </script>
+</body>
+</html>

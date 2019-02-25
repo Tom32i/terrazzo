@@ -5,6 +5,7 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <script src="src/math.js"></script>
     <script src="src/Generator.js"></script>
     <script src="src/renderer/SvgRenderer.js"></script>
     <script src="src/Patch.js"></script>
@@ -12,16 +13,16 @@
 <body>
     <script type="text/javascript">
         const palettes = [
-            { colors: ['#1b506d', '#ddcab8', '#b25b49', '#f6bf80'], background: '#f6f6f6' },
+            { colors: ['#477288', '#bf796d', '#f6c38f', '#7e9a9e', '#cdd1d0'], background: '#f6f6f6' },
             { colors: ['#e2c3a3', '#c36d52', '#435755', '#485158'], background: '#2a2d31' },
-            { colors: ['#e0c1bf', '#e5eaed', '#395f67', '#bdc5d1'], background: '#cfdedb' },
-            { colors: ['#dddedb', '#974a4f', '#d7b3bb', '#325253'], background: '#f3efec' },
+            { colors: ['#e0c1bf', '#eef3f5', '#486c73', '#bdc5d1'], background: '#cfdedb' },
+            { colors: ['#dddedb', '#9f5b60', '#d9b9c0', '#71989a'], background: '#f1edeb' },
+            { colors: ['#f1c58d', '#c0a891', '#6483a6', '#e2e3ee'], background: '#294053' },
         ];
         const { innerWidth, innerHeight } = window;
-        const palette = palettes[Math.floor(Math.random() * palettes.length)];
+        const palette = Math.randomElement(palettes);
         const generator = new Generator(innerWidth, innerHeight, palette.colors);
         const renderer = new SvgRenderer(innerWidth, innerHeight);
-
         renderer.render(generator.getPatches(), palette.background);
     </script>
 </body>

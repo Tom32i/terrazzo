@@ -7,7 +7,7 @@ class Generator {
         return Math.random() * magnitude - (magnitude / 2);
     }
 
-    constructor(width, height, colors, density = 2800) {
+    constructor(width, height, colors, density = 2000) {
         this.width = width;
         this.height = height;
         this.colors = colors;
@@ -19,10 +19,13 @@ class Generator {
 
     getPatches() {
         const length = Math.round(this.surface / this.density);
-        const patches = this.createPatches(length * 0.1, [10, 21], [30, 40]);
+        const patches = this.createPatches(length * 0.06, [10, 21], [30, 40]);
 
         // Fill with small patches
-        this.createPatches(length, [3, 10], [2, 18], patches);
+        this.createPatches(length * 0.5, [3, 10], [3, 18], patches);
+
+        // Fill with smaller patches
+        this.createPatches(length, [3, 8], [1, 10], patches);
 
         return patches;
     }
@@ -70,7 +73,7 @@ class Generator {
 
         return new Array(length).fill(null).map(() => {
             angle += defaultAngle * (1 + randomModificator(0.5));
-            orbit = orbit * (1 + randomModificator(0.5));
+            orbit = Math.min(orbit * (1 + randomModificator(0.5)), radius * 2);
 
             return [ Math.cos(angle) * orbit, Math.sin(angle) * orbit ];
         });

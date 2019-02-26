@@ -1,46 +1,90 @@
 class Patch {
+    /**
+     * Get box
+     *
+     * @param {Array} origin
+     * @param {Array} points
+     *
+     * @return {Array}
+     */
     static getBox(origin, points) {
+        const { min, max } = Math;
         const [x, y] = origin;
         let minX, maxX, minY, maxY;
 
         points.forEach(([x, y]) => {
-            minX = minX ? Math.min(minX, x) : x;
-            maxX = maxX ? Math.max(maxX, x) : x;
-            minY = minY ? Math.min(minY, y) : y;
-            maxY = maxY ? Math.max(maxY, y) : y;
+            minX = minX ? min(minX, x) : x;
+            maxX = maxX ? max(maxX, x) : x;
+            minY = minY ? min(minY, y) : y;
+            maxY = maxY ? max(maxY, y) : y;
         });
 
         return [minX + x, maxX + x, minY + y, maxY + y];
     }
 
-    static getMeanRadius(points) {
-        const { dist } = this;
+    /**
+     * Get mean radius
+     *
+     * @param {Array} points
+     * @param {Number} round
+     *
+     * @return {Number}
+     */
+    static getMeanRadius(points, round) {
+        const { dist } = Math;
 
-        return points.reduce((sum, point) => sum + dist(point, [0, 0]), 0) / points.length;
+        return points.reduce((sum, point) => sum + dist(point, [0, 0]), 0) / (points.length - 1) + round * 2;
     }
 
-    static getMaxRadius(points) {
-        return points.reduce((radius, point) => Math.max(radius, dist(point, [0, 0])), 0);
+    /**
+     * Get max radius
+     *
+     * @param {Array} points
+     * @param {Number} round
+     *
+     * @return {Number}
+     */
+    static getMaxRadius(points, round) {
+        const { dist, max } = Math;
+
+        return points.reduce((radius, point) => max(radius, dist(point, [0, 0])), 0) + round * 2;
     }
 
-    static dist(A, B) {
-        return Math.sqrt(Math.pow(A[0] - B[0], 2) + Math.pow(A[1] - B[1], 2));
-    }
-
-    constructor(color, origin, points) {
+    /**
+     * @param {String} color
+     * @param {Number[]} origin
+     * @param {Array} points
+     * @param {Number} round
+     */
+    constructor(color, origin, points, round) {
         this.color = color;
         this.origin = origin;
         this.points = points;
+        this.round = round;
         this.box = this.constructor.getBox(origin, points);
-        this.radius = this.constructor.getMeanRadius(points);
+        this.radius = this.constructor.getMeanRadius(points, round);
 
         this.touch = this.touch.bind(this);
     }
 
+    /**
+     * Does the given patch touch me?
+     *
+     * @param {Patch} patch
+     *
+     * @return {Boolean}
+     */
     touch(patch) {
         return this.touchRadius(patch);
     }
 
+    /**
+     * Box based collision test
+     *
+     * @param {Patch} patch
+     *
+     * @return {Boolean}
+     */
     touchBox(patch) {
         const [minX, maxX, minY, maxY] = this.box;
         const [pMinX, pMaxX, pMinY, pMaxY] = patch.box;
@@ -48,9 +92,14 @@ class Patch {
         return minX <= pMaxX && maxX >= pMinX && minY <= pMaxY && maxY >= pMinY;
     }
 
+    /**
+     * Radius based collision test
+     *
+     * @param {Patch} patch
+     *
+     * @return {Boolean}
+     */
     touchRadius(patch) {
-        const { dist } = this.constructor;
-
-        return dist(this.origin, patch.origin) < (patch.radius + this.radius);
+        return Math.dist(this.origin, patch.origin) < (patch.radius + this.radius);
     }
 }
